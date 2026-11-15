@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nocturne Alembic — Lọ Giả Kim Đêm Muộn</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="stage-wrapper">
+      <!-- Top Telemetry & Apothecary Header Bar -->
+      <header class="hud-topbar">
+        <div class="brand-block">
+          <span class="brand-emblem" aria-hidden="true">⚗️</span>
+          <div>
+            <h1 class="brand-title">NOCTURNE ALEMBIC</h1>
+            <p id="ui-subtitle" class="brand-subtitle">TIỆM GIẢ KIM ĐÊM MUỘN</p>
+          </div>
+        </div>
+
+        <div class="telemetry-strip">
+          <div class="stat-pill">
+            <span id="lbl-night" class="stat-label">ĐÊM</span>
+            <strong id="val-night" class="stat-value">01 / 03</strong>
+          </div>
+          <div class="stat-pill stat-gold">
+            <span id="lbl-gold" class="stat-label">VÀNG</span>
+            <strong id="val-gold" class="stat-value">60g</strong>
+          </div>
+          <div class="stat-pill">
+            <span id="lbl-rep" class="stat-label">DANH TIẾNG</span>
+            <strong id="val-rep" class="stat-value">0</strong>
+          </div>
+          <div class="stat-pill stat-drops">
+            <span id="lbl-drops" class="stat-label">ỐNG NHỎ GIỌT</span>
+            <strong id="val-drops" class="stat-value">7 / 7</strong>
+            <div class="refill-bar-track" aria-hidden="true">
+              <div id="refill-bar-fill" class="refill-bar-fill"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <button type="button" id="btn-grimoire" class="hud-btn">📖 Cổ Thư (Grimoire)</button>
+          <button type="button" id="btn-supporter" class="hud-btn hud-btn-gold">👑 Bản Đầy Đủ</button>
+          <button type="button" id="btn-lang" class="hud-btn hud-btn-icon" title="Switch Language VI / EN">VI / EN</button>
+          <button type="button" id="btn-audio" class="hud-btn hud-btn-icon" title="Toggle Sound & Rain">🔊</button>
+          <button type="button" id="btn-reset" class="hud-btn hud-btn-subtle" title="Reset Save">↺</button>
+        </div>
+      </header>
+
+      <!-- Main 3-Column Workbench Layout -->
+      <main class="workbench-grid">
+        <!-- LEFT PANEL: Midnight Visitor Window & Distilled Potion Shelf -->
+        <section class="bench-panel" aria-labelledby="hdr-visitor">
+          <div class="panel-header">
+            <h2 id="hdr-visitor" class="panel-title">KHÁCH ĐÊM KHUYA</h2>
+            <span id="visitor-progress" class="order-badge">1 / 3</span>
+          </div>
+
+          <div class="visitor-card">
+            <div class="visitor-header-row">
+              <div id="visitor-glyph" class="visitor-avatar" aria-hidden="true">🕰️</div>
+              <div>
+                <h3 id="visitor-name" class="visitor-name">Ông Lão Thợ Đồng Hồ</h3>
+                <p id="visitor-title" class="visitor-role">Kẻ Đếm Giờ Mất Ngủ</p>
+              </div>
+            </div>
+
+            <p id="visitor-dialogue" class="visitor-quote">
+              “Bánh răng đồng hồ tháp chuông bị đóng băng bởi sương đêm rồi...”
+            </p>
+
+            <div class="order-requirements-box">
+              <div class="order-req-row">
+                <span id="lbl-order-req" class="order-meta-label">Yêu cầu đơn hàng:</span>
+                <span id="val-order-reward" class="order-bounty">+65g</span>
+              </div>
+              <div id="order-req-list" class="order-req-chips"></div>
+            </div>
+
+            <div class="visitor-actions">
+              <button type="button" id="btn-deliver" class="primary-action-btn" disabled>
+                ✨ Giao Thuốc Cho Khách
+              </button>
+              <button type="button" id="btn-skip-visitor" class="secondary-action-btn">
+                Đổi khách khác (-10g)
+              </button>
+            </div>
+          </div>
+
+          <!-- Distilled Potion Inventory Shelf -->
+          <div class="panel-header shelf-header-row">
+            <h2 id="hdr-shelf" class="panel-title">KỆ THUỐC ĐÃ CHƯNG CẤT</h2>
+            <button type="button" id="btn-sell-surplus" class="mini-link-btn">💰 Bán Lẻ Thuốc Dư</button>
+          </div>
+          <div id="potion-shelf-grid" class="potion-shelf-grid"></div>
+        </section>
+
+        <!-- CENTER STAGE: The Interactive Glass Alembic Canvas + Element Belt -->
+        <section class="alembic-stage-column" aria-label="Alembic Synthesis Vessel">
+          <div class="canvas-frame">
+            <canvas id="alembic-canvas" width="520" height="560"></canvas>
+            <div id="discovery-toast" class="discovery-toast" hidden></div>
+            <button type="button" id="btn-harvest-all" class="harvest-floating-btn">
+              ⚗️ Thu Hoạch Nhanh Trong Bình
+            </button>
+          </div>
+
+          <div class="element-belt-panel">
+            <div class="belt-header-row">
+              <span id="hdr-element-select" class="belt-title">CHỌN NGUYÊN TỐ THẢ (PHÍM 1-4 / CLICK)</span>
+              <span id="txt-drop-hint" class="belt-hint">Di chuột trong miệng bình & Click (hoặc Space) để thả</span>
+            </div>
+            <div id="element-selector-row" class="element-selector-row"></div>
+          </div>
+        </section>
+
+        <!-- RIGHT PANEL: Alchemical Bench & Peg Forge Shop -->
+        <section class="bench-panel" aria-labelledby="hdr-forge">
+          <div class="panel-header">
+            <h2 id="hdr-forge" class="panel-title">LÒ RÈN CHỐT & NÂNG CẤP</h2>
+          </div>
+
+          <div id="upgrades-list" class="upgrades-list"></div>
+
+          <!-- Quick Synthesis Cheat-Sheet Card -->
+          <div class="quick-recipe-card">
+            <h3 id="quick-recipe-title" class="quick-recipe-title">⚗️ Gợi Ý Phản Ứng Nhanh</h3>
+            <div id="quick-recipe-list" class="quick-recipe-list"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- MODAL 1: Alchemical Grimoire (Native <dialog closedby="any">) -->
+    <dialog id="grimoire-dialog" closedby="any" aria-labelledby="grimoire-dialog-title">
+      <div class="dialog-inner">
+        <header class="dialog-header">
+          <div>
+            <h2 id="grimoire-dialog-title" class="dialog-title">CỔ THƯ GIẢ KIM (ALCHEMICAL GRIMOIRE)</h2>
+            <p id="grimoire-dialog-sub" class="dialog-subtitle">
+              Khám phá toàn bộ 11 công thức phản ứng nguyên tố và 15 tinh chất.
+            </p>
+          </div>
+          <form method="dialog">
+            <button type="submit" id="btn-close-grimoire" class="hud-btn" autofocus>Đóng (Esc)</button>
+          </form>
+        </header>
+
+        <div class="grimoire-columns">
+          <div>
+            <h3 id="tab-recipes-title" class="grimoire-section-heading">Công Thức Phản Ứng (11)</h3>
+            <div id="grimoire-recipes-grid" class="grimoire-recipes-grid"></div>
+          </div>
+          <div>
+            <h3 id="tab-elements-title" class="grimoire-section-heading">Danh Mục Nguyên Tố (15)</h3>
+            <div id="grimoire-elements-grid" class="grimoire-elements-grid"></div>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- MODAL 2: Supporter Edition / Full Version Unlock (Native <dialog closedby="any">) -->
+    <dialog id="supporter-dialog" closedby="any" aria-labelledby="supporter-dialog-title">
+      <div class="dialog-inner supporter-dialog-inner">
+        <header class="dialog-header">
+          <div>
+            <h2 id="supporter-dialog-title" class="dialog-title gold-text">
+              NOCTURNE ALEMBIC — SUPPORTER EDITION
+            </h2>
+            <p id="supporter-dialog-sub" class="dialog-subtitle">
+              Cảm ơn bạn đã trải nghiệm! Mở khóa toàn bộ nội dung cao cấp để ủng hộ nhà phát triển trên itch.io.
+            </p>
+          </div>
+          <form method="dialog">
+            <button type="submit" id="btn-close-supporter" class="hud-btn" autofocus>Đóng (Esc)</button>
+          </form>
+        </header>
+
+        <div class="supporter-perks-box">
+          <h3 id="supporter-perks-hdr" class="grimoire-section-heading">
+            Quyền lợi Bản Đầy Đủ ($2.99 trên itch.io):
+          </h3>
+          <ul class="supporter-perks-list">
+            <li id="perk-1">🌌 Mở khóa Chế Độ Vô Tận (Endless Cozy Night) — Chơi thư giãn không giới hạn đêm.</li>
+            <li id="perk-2">👑 Giao diện Bình Giả Kim Hoàng Gia (Golden Aureate Theme) rực rỡ.</li>
+            <li id="perk-3">🧚 Tặng ngay +500 Vàng khởi đầu & Mở khóa Tinh Linh Tự Động (Idle Mode).</li>
+            <li id="perk-4">📜 Giải mã toàn bộ Gợi Ý Công Thức Bí Mật trong Cổ Thư.</li>
+          </ul>
+        </div>
+
+        <div class="supporter-unlock-controls">
+          <div class="key-input-row">
+            <input
+              type="text"
+              id="input-supporter-key"
+              class="supporter-key-input"
+              placeholder="Nhập mã Supporter Key (VD: ALCHEMIST-777)"
+              aria-label="Supporter Key"
+            />
+            <button type="button" id="btn-activate-key" class="primary-action-btn">Kích Hoạt Mã</button>
+          </div>
+          <p id="supporter-feedback-msg" class="supporter-feedback"></p>
+
+          <div class="creator-preview-row">
+            <button type="button" id="btn-instant-unlock" class="hud-btn hud-btn-gold">
+              ✨ Mở Khóa Thử Ngay (Dành cho Chủ Dự Án / Test)
+            </button>
+            <button type="button" id="btn-toggle-theme" class="hud-btn" hidden>
+              👑 Đổi Giao Diện Bình Vàng Hoàng Gia
+            </button>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- MODAL 3: Dawn / Night Complete Summary (Native <dialog closedby="any">) -->
+    <dialog id="night-complete-dialog" closedby="any" aria-labelledby="night-complete-title">
+      <div class="dialog-inner night-dialog-inner">
+        <h2 id="night-complete-title" class="dialog-title gold-text">🌅 BÌNH MINH LÓ RẠNG!</h2>
+        <p id="night-complete-desc" class="dialog-subtitle">
+          Bạn đã hoàn thành xuất sắc các đơn hàng trong đêm mưa này.
+        </p>
+        <div id="night-summary-stats" class="night-summary-stats"></div>
+        <div class="night-dialog-actions">
+          <button type="button" id="btn-next-night" class="primary-action-btn" autofocus>
+            🌙 Bước Sang Đêm Tiếp Theo
+          </button>
+        </div>
+      </div>
+    </dialog>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
+

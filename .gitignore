@@ -1,0 +1,12 @@
+# Dependencies & Build
+node_modules/
+dist/
+*.zip
+
+# Environment & Secrets
+.env
+.env.*
+
+# OS / Editor
+.DS_Store
+Thumbs.db
